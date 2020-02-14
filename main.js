@@ -25,7 +25,7 @@ function drawTodos(){
     let classDone = todos[key].done ? "done" : ""
     li.innerHTML = `
       <span id="${key}" class="${classDone}">${todos[key].text}</span>
-      <span>X</span>
+      <span data-id="${key}" data-action="delete" >X</span>
     `;
     setListeners(li);
     list.appendChild(li);
@@ -35,6 +35,12 @@ function drawTodos(){
 function setListeners(li){
   li.addEventListener('click', e => {
     console.log(e.target)
+    if(e.target.getAttribute("data-action") === "delete") {
+      let key = e.target.getAttribute('data-id');
+      delete todos[key]
+      drawTodos()
+      return
+    }
     let key = e.target.id;
     todos[key].done = !todos[key].done
     drawTodos()
