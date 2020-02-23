@@ -152,7 +152,7 @@ input.addEventListener('keydown', e => {
 });
 
 // init
-drawTodos()
+drawTodos();
 
 // REDUX
 
@@ -160,17 +160,22 @@ drawTodos()
 function todosReducer(state={}, action) {
   switch(action.type) {
     case 'ADD_TODO':
+      action.todo["id"] = Object.keys(state).length;
+      return {...state, [Object.keys(state).length]:action.todo};
     case 'UPDATE_TODO':
+      return {...state, [action.todo.id]:action.todo};
     case "DELETE_TODO":
+      delete state[action.todo.id];
+      return {...state};
     default:
       return state;
   }
-}
+};
 
 // store
 let store = Object(redux__WEBPACK_IMPORTED_MODULE_0__["createStore"])(todosReducer, { name: 'Arturo' });
 
-console.log(store.getState())
+console.log(store.getState());
 
 /***/ }),
 /* 1 */
