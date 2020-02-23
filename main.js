@@ -1,4 +1,5 @@
 //  import * as Redux from 'redux'
+import { createStore } from 'redux'
 //  nodes
 let input = document.getElementById("input");
 let list = document.getElementById("list");
@@ -63,14 +64,17 @@ drawTodos()
 // REDUX
 
 // reducer
-function todos(state={}, action) {
+function todosReducer(state={}, action) {
   switch(action.type) {
     case 'ADD_TODO':
     case 'UPDATE_TODO':
     case "DELETE_TODO":
     default:
-      return state
+      return state;
   }
 }
 
 // store
+let store = createStore(todosReducer, { name: 'Arturo' });
+
+console.log(store.getState())
