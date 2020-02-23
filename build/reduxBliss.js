@@ -132,16 +132,20 @@ function setListeners(li){
   li.addEventListener('click', e => {
     if(e.target.getAttribute("data-action") === "delete") {
       let key = e.target.getAttribute('data-id');
-      delete todos[key]
-      drawTodos()
-      return
+      store.dispatch({
+        type: 'DELETE_TODO',
+        id: key
+      });
+      // delete todos[key];
+      // drawTodos();
+      return;
     }
     let key = e.target.id;
-    todos[key].done = !todos[key].done
+    todos[key].done = !todos[key].done;
     store.dispatch({
       type: 'UPDATE_TODO',
       todo: todos[key]
-    })
+    });
     //todos[key].done = !todos[key].done
     //drawTodos()
   });
@@ -151,11 +155,11 @@ function setListeners(li){
 input.addEventListener('keydown', e => {
   if(e.key === "Enter") {
     let text = e.target.value;
-    let todo = {text, done:false}
+    let todo = { text, done:false };
     store.dispatch({
       type: 'ADD_TODO',
       todo
-    })
+    });
     //let id = Object.keys(todos).length;
     //todos[id] = {text, done:false};
     //drawTodos();
@@ -173,7 +177,7 @@ function todosReducer(state={}, action) {
     case 'UPDATE_TODO':
       return {...state, [action.todo.id]:action.todo};
     case "DELETE_TODO":
-      delete state[action.todo.id];
+      delete state[action.id];
       return {...state};
     default:
       return state;
