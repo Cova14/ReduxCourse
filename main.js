@@ -5,6 +5,8 @@ let input = document.getElementById("input");
 let addEmail = document.getElementById("addEmail")
 let list = document.getElementById("list");
 let emailList = document.getElementById("emailList");
+let addDish = document.getElementById('addDish');
+let dishesList = document.getElementById('dishesList');
 let todos = {
   0: {
     text: "Ir al cine",
@@ -20,6 +22,40 @@ let todos = {
   }
 };
 // function
+
+function drawDishes() {
+  dishesList.innerHTML = "";
+  let dishes = store.getState().dishes;
+  for (let id in dishes) {
+    let li = document.createElement('li')
+    let classDone = dishes[id].done ? "done" : ""
+    li.innerHTML = `
+      <span id="${id}" class="${classDone}">${dishes[id].name}</span>
+      <span data-id="${id}" data-action="delete">X</span>
+    `;
+    setDishesListener(li, dishes);
+    dishesList.appendChild(li);
+  }
+};
+
+function setDishesListener(li, dishes) {
+  li.addEventListener('click', e => {
+    if(e.target.getAttribute("data-action") === "delete") {
+      let id = e.target.getAttribute('data-id');
+      store.dispatch({
+        type: 'DELETE_DISH',
+        id
+      })
+      return;
+    }
+    let id = e.target.id
+    dishes[id].done = !dishes[id].done
+    store.dispatch({
+      type: 'UPDATE_DISH',
+      dish: dishes[id]
+    })
+  })
+}
 
 function drawEmails() {
   emailList.innerHTML = "";
@@ -41,9 +77,9 @@ function setEmailClickListener(li) {
     store.dispatch({
       type: 'DELETE_EMAIL',
       email
-    })
-  })
-}
+    });
+  });
+};
 
 function drawTodos() {
   list.innerHTML = "";
@@ -110,9 +146,37 @@ addEmail.addEventListener('keydown', e => {
       email
     })
   }
-})
+});
+
+addDish.addEventListener('keydown', e => {
+  if(e.key === 'Enter') {
+    let name = e.target.value;
+    let dish = { name, done:false };
+    e.target.value = '';
+    store.dispatch({
+      type: 'ADD_DISH',
+      dish
+    });
+  }
+});
 
 // REDUX
+
+// tercer reducer para platillos
+function dishesReducer(state = {}, action) {
+  switch(action.type) {
+    case 'ADD_DISH':
+      action.dish["id"] = Object.keys(state).length;
+      return{...state, [Object.keys(state).length]:action.dish};
+    case 'UPDATE_DISH':
+      return{...state, [action.dish.id]:action.dish};
+    case 'DELETE_DISH':
+      delete state[action.id];
+      return{...state};
+    default:
+      return state;
+  }
+}
 
 // segundo reducer para correos
 function emailsReducer(state = [], action) {
@@ -145,18 +209,26 @@ function todosReducer(state={}, action) {
 // combinar los reducers
 let rootReducers = combineReducers({
   todos: todosReducer,
-  emails: emailsReducer
+  emails: emailsReducer,
+  dishes: dishesReducer
 })
 
 // store
 let store = createStore(rootReducers, {
   emails: [
-    "arty1498@hotmail.com"
+    "correo@correo.com"
   ],
   todos: {
     0: {
-      text: 'Crear store',
+      text: 'Crear mi propio ejemplo en base a los todos',
       done: true,
+      id: 0
+    }
+  },
+  dishes: {
+    0: {
+      name: 'Taquitos de suaperro',
+      done: false,
       id: 0
     }
   }
@@ -170,8 +242,10 @@ let store = createStore(rootReducers, {
 store.subscribe(() => {
   drawTodos();
   drawEmails();
+  drawDishes();
 })
 
 // init
 drawTodos();
 drawEmails();
+drawDishes();
