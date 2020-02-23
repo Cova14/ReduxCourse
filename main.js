@@ -20,6 +20,8 @@ let todos = {
 // function
 function drawTodos(){
   list.innerHTML = "";
+  // actualizar los todos antes de dibujar
+  todos = store.getState()
   for(let key in todos) {
     let li = document.createElement('li');
     // li.id = key;
@@ -52,9 +54,14 @@ function setListeners(li){
 input.addEventListener('keydown', e => {
   if(e.key === "Enter") {
     let text = e.target.value;
-    let id = Object.keys(todos).length;
-    todos[id] = {text, done:false};
-    drawTodos();
+    let todo = {text, done:false}
+    store.dispatch({
+      type: 'ADD_TODO',
+      todo
+    })
+    //let id = Object.keys(todos).length;
+    //todos[id] = {text, done:false};
+    //drawTodos();
   }
 });
 
@@ -64,6 +71,7 @@ input.addEventListener('keydown', e => {
 function todosReducer(state={}, action) {
   switch(action.type) {
     case 'ADD_TODO':
+      console.log(state)
       action.todo["id"] = Object.keys(state).length;
       return {...state, [Object.keys(state).length]:action.todo};
     case 'UPDATE_TODO':
@@ -86,7 +94,10 @@ let store = createStore(todosReducer, {
 });
 
 // sustituir los todos
-todos = store.getState()
+//todos = store.getState()
+
+// que hacer cuando hay cambios
+store.subscribe(drawTodos)
 
 // init
 drawTodos();
