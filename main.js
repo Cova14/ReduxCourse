@@ -30,9 +30,20 @@ function drawEmails() {
       <span>${email}</span>
       <span id=${email}>X</span>
     `
+    setEmailClickListener(li)
     emailList.appendChild(li)
   });
 };
+
+function setEmailClickListener(li) {
+  li.addEventListener('click', e => {
+    let email = e.target.id
+    store.dispatch({
+      type: 'DELETE_EMAIL',
+      email
+    })
+  })
+}
 
 function drawTodos() {
   list.innerHTML = "";
