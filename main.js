@@ -58,9 +58,6 @@ input.addEventListener('keydown', e => {
   }
 });
 
-// init
-drawTodos();
-
 // REDUX
 
 // reducer
@@ -80,6 +77,16 @@ function todosReducer(state={}, action) {
 };
 
 // store
-let store = createStore(todosReducer, { name: 'Arturo' });
+let store = createStore(todosReducer, {
+  0: {
+    text: 'Crear store',
+    done: true,
+    id: 0
+  }
+});
 
-console.log(store.getState());
+// sustituir los todos
+todos = store.getState()
+
+// init
+drawTodos();
