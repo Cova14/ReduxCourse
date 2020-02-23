@@ -95,7 +95,9 @@ __webpack_require__.r(__webpack_exports__);
 
 //  nodes
 let input = document.getElementById("input");
+let addEmail = document.getElementById("addEmail")
 let list = document.getElementById("list");
+let emailList = document.getElementById("emailList");
 let todos = {
   0: {
     text: "Ir al cine",
@@ -111,10 +113,24 @@ let todos = {
   }
 };
 // function
-function drawTodos(){
+
+function drawEmails() {
+  emailList.innerHTML = "";
+  let emails = store.getState().emails;
+  emails.map(email => {
+    let li = document.createElement('li')
+    li.innerHTML = `
+      <span>${email}</span>
+      <span id=${email}>X</span>
+    `
+    emailList.appendChild(li)
+  });
+};
+
+function drawTodos() {
   list.innerHTML = "";
   // actualizar los todos antes de dibujar
-  todos = store.getState()
+  todos = store.getState().todos;
   for(let key in todos) {
     let li = document.createElement('li');
     // li.id = key;
@@ -156,6 +172,7 @@ input.addEventListener('keydown', e => {
   if(e.key === "Enter") {
     let text = e.target.value;
     let todo = { text, done:false };
+    e.target.value = ""
     store.dispatch({
       type: 'ADD_TODO',
       todo
@@ -165,6 +182,17 @@ input.addEventListener('keydown', e => {
     //drawTodos();
   }
 });
+
+addEmail.addEventListener('keydown', e => {
+  if(e.key === "Enter") {
+    let email = e.target.value
+    e.target.value = ""
+    store.dispatch({
+      type: 'ADD_EMAIL',
+      email
+    })
+  }
+})
 
 // REDUX
 
@@ -220,10 +248,15 @@ let store = Object(redux__WEBPACK_IMPORTED_MODULE_0__["createStore"])(rootReduce
 //todos = store.getState()
 
 // que hacer cuando hay cambios
-store.subscribe(drawTodos)
+// store.subscribe(drawTodos)
+store.subscribe(() => {
+  drawTodos();
+  drawEmails();
+})
 
 // init
 drawTodos();
+drawEmails();
 
 
 /***/ }),
