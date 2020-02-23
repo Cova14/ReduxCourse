@@ -168,6 +168,18 @@ input.addEventListener('keydown', e => {
 
 // REDUX
 
+// segundo reducer para correos
+function emailsReducer(state = [], action) {
+  switch(action.type) {
+    case 'ADD_EMAIL':
+      return [action.email, ...state];
+    case 'DELETE_EMAIL':
+      return [...state.filter(email => email !== action.email)];
+    default:
+      return state;
+  }
+};
+
 // reducer
 function todosReducer(state={}, action) {
   switch(action.type) {
@@ -184,12 +196,23 @@ function todosReducer(state={}, action) {
   }
 };
 
+// combinar los reducers
+let rootReducers = Object(redux__WEBPACK_IMPORTED_MODULE_0__["combineReducers"])({
+  todos: todosReducer,
+  emails: emailsReducer
+})
+
 // store
-let store = Object(redux__WEBPACK_IMPORTED_MODULE_0__["createStore"])(todosReducer, {
-  0: {
-    text: 'Crear store',
-    done: true,
-    id: 0
+let store = Object(redux__WEBPACK_IMPORTED_MODULE_0__["createStore"])(rootReducers, {
+  emails: [
+    "arty1498@hotmail.com"
+  ],
+  todos: {
+    0: {
+      text: 'Crear store',
+      done: true,
+      id: 0
+    }
   }
 });
 
