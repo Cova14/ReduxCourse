@@ -1,5 +1,5 @@
-// import * as Redux from 'redux'
-// nodes
+//  import * as Redux from 'redux'
+//  nodes
 let input = document.getElementById("input");
 let list = document.getElementById("list");
 let todos = {
@@ -16,7 +16,7 @@ let todos = {
     done: false
   }
 };
-//function
+// function
 function drawTodos(){
   list.innerHTML = "";
   for(let key in todos) {
@@ -47,7 +47,7 @@ function setListeners(li){
   });
 };
 
-//Listeners
+// Listeners
 input.addEventListener('keydown', e => {
   if(e.key === "Enter") {
     let text = e.target.value;
@@ -57,4 +57,7 @@ input.addEventListener('keydown', e => {
   }
 });
 
+// init
 drawTodos()
+
+// REDUX
