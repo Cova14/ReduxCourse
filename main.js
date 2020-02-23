@@ -61,3 +61,16 @@ input.addEventListener('keydown', e => {
 drawTodos()
 
 // REDUX
+
+// reducer
+function todos(state={}, action) {
+  switch(action.type) {
+    case 'ADD_TODO':
+    case 'UPDATE_TODO':
+    case "DELETE_TODO":
+    default:
+      return state
+  }
+}
+
+// store
